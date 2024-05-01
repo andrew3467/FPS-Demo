@@ -7,11 +7,9 @@
 
 namespace Engine {
 
-    Material::Material(std::shared_ptr<Shader> &shader) {
-
-    }
-
-    void Material::SetColor(const glm::vec4 &color) {
+    Material::Material(std::shared_ptr<Shader> &shader)
+        : mShader(shader)
+    {
 
     }
 }

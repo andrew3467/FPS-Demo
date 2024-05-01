@@ -72,7 +72,7 @@ namespace Engine {
         return shader;
     }
 
-    std::shared_ptr<Shader> Shader::Get(const std::string &name) {
+    std::shared_ptr<Shader>& Shader::Get(const std::string &name) {
         return sShaders[name];
     }
 

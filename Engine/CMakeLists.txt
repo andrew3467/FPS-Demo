@@ -17,6 +17,10 @@ include_directories(external/glad/include)
 add_subdirectory(external/glm)
 include_directories(external/glm)
 
+#stb image
+file(GLOB_RECURSE STB_SRC external/stbimage/*)
+include_directories(external/stbimage/include)
+
 
 include_directories(src/Engine)
 
@@ -27,6 +31,7 @@ add_library(
         FPS_Engine
         ${SOURCES}
         ${HEADERS}
+        ${STB_SRC}
 )
 
 target_link_libraries(

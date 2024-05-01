@@ -7,6 +7,7 @@
 
 
 #include "Shader.h"
+#include "Texture.h"
 
 namespace Engine {
     class Material {
@@ -15,12 +16,16 @@ namespace Engine {
         ~Material() = default;
 
         std::shared_ptr<Shader>& GetShader() {return mShader;}
+        std::shared_ptr<Texture2D>& GetTexture() {return mTexture;}
         glm::vec4 GetColor() {return mColor;}
 
+        inline void SetTexture(const std::shared_ptr<Texture2D>& texture) {mTexture = texture;}
         inline void SetColor(const glm::vec4& color) {mColor = color;}
 
     private:
         std::shared_ptr<Shader> mShader;
+        std::shared_ptr<Texture2D> mTexture = nullptr;
+
         glm::vec4 mColor;
     };
 }

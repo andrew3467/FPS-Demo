@@ -15,6 +15,8 @@ namespace Engine {
     struct SceneData {
         glm::mat4 ViewProj;
 
+        std::shared_ptr<Texture2D> WhiteTexture;
+
         std::shared_ptr<VertexArray> CubeVA;
     };
 
@@ -22,6 +24,10 @@ namespace Engine {
 
     void Renderer::Init() {
         sData = new SceneData();
+
+        sData->WhiteTexture = Texture2D::Create(1, 1);
+        uint32_t texData = 0xffffffff;
+        sData->WhiteTexture->SetData(&texData, sizeof(texData));
 
         {
             float vertices[] = {
@@ -98,26 +104,51 @@ namespace Engine {
 
     }
 
-    void Renderer::Submit(std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> &VA) {
+    void Renderer::Submit(Material& material, std::shared_ptr<VertexArray> &VA) {
         VA->Bind();
 
-        shader->Bind();
-        shader->SetMat4("uViewProj", sData->ViewProj);
-        shader->SetMat4("uTransform", glm::mat4(1));
-        shader->SetFloat3("uColor", glm::vec3(1));
+        auto s = material.GetShader();
+
+        s->Bind();
+
+        if(material.GetTexture() == nullptr){
+            sData->WhiteTexture->Bind(0);
+            s->SetFloat4("uColor", material.GetColor());
+        }else{
+            material.GetTexture()->Bind(0);
+            s->SetFloat4("uColor", glm::vec4(1.0f));
+        }
+
+        s->SetInt("uTexture", 0);
+        s->SetMat4("uViewProj", sData->ViewProj);
+        s->SetMat4("uTransform", glm::mat4(1));
+        s->SetFloat3("uColor", material.GetColor());
 
         glDrawElements(GL_TRIANGLES, sData->CubeVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
     }
 
-    void Renderer::SubmitCube(std::shared_ptr<Shader> shader, const glm::vec3& position, const glm::vec3& scale) {
+    void Renderer::SubmitCube(Material& material, const glm::vec3& position, const glm::vec3& scale) {
         sData->CubeVA->Bind();
 
         auto transform = glm::translate(glm::scale(glm::mat4(1), scale), position);
 
-        shader->Bind();
-        shader->SetMat4("uViewProj", sData->ViewProj);
-        shader->SetMat4("uTransform", transform);
-        shader->SetFloat3("uColor", glm::vec3(1));
+
+        auto s = material.GetShader();
+        s->Bind();
+
+        if(material.GetTexture() == nullptr){
+            sData->WhiteTexture->Bind(0);
+            s->SetFloat4("uColor", material.GetColor());
+        }else{
+            material.GetTexture()->Bind(0);
+            s->SetFloat4("uColor", glm::vec4(1.0f));
+        }
+
+        s->SetInt("uTexture", 0);
+        s->SetMat4("uViewProj", sData->ViewProj);
+        s->SetMat4("uTransform", transform);
+
+
 
         glDrawElements(GL_TRIANGLES, sData->CubeVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
     }

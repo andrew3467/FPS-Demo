@@ -20,7 +20,7 @@ namespace Engine {
         static std::shared_ptr<Shader> Create(const std::string& path);
         static void Init();
 
-        static std::shared_ptr<Shader> Get(const std::string& name);
+        static std::shared_ptr<Shader>& Get(const std::string& name);
 
         void Bind();
         void Unbind();

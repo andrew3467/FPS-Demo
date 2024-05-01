@@ -21,11 +21,13 @@ void main() {
 
 layout (location = 0) out vec4 FragColor;
 
-uniform vec3 uColor;
+uniform vec4 uColor;
+
+uniform sampler2D uTexture;
 
 in vec2 vTexCoord;
 
 
 void main() {
-    FragColor = vec4(uColor, 1.0);
+    FragColor = texture(uTexture, vTexCoord) * uColor;
 }
