@@ -5,6 +5,8 @@
 #ifndef FPS_DEMO_APPLICATION_H
 #define FPS_DEMO_APPLICATION_H
 
+#include "CameraController.h"
+
 namespace Demo {
     class Application {
     public:
@@ -15,8 +17,6 @@ namespace Demo {
 
         void Run();
 
-        void OnEvent();
-
     private:
         void Init();
 
@@ -26,7 +26,9 @@ namespace Demo {
     private:
         static Application *sInstance;
 
-        bool mRunning;
+
+    private:
+        std::unique_ptr<CameraController> mCamController;
     };
 }
 

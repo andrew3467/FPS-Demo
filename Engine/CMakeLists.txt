@@ -14,8 +14,11 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(external/glad)
 include_directories(external/glad/include)
 
+add_subdirectory(external/glm)
+include_directories(external/glm)
 
-include_directories(src/engine)
+
+include_directories(src/Engine)
 
 file(GLOB_RECURSE SOURCES src/*.cpp)
 file(GLOB_RECURSE HEADERS src/*.h)
@@ -31,4 +34,5 @@ target_link_libraries(
         PUBLIC
         glfw
         glad
+        glm
 )
