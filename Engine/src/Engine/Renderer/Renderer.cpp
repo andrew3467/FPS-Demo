@@ -9,12 +9,11 @@
 #include <Glad/glad.h>
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace Engine {
     struct SceneData {
         glm::mat4 ViewProj;
-
-        std::shared_ptr<Shader> BasicShader = Shader::Create("../assets/shaders/Solid_Unlit.glsl");
 
         std::shared_ptr<VertexArray> CubeVA;
     };
@@ -93,33 +92,32 @@ namespace Engine {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         sData->ViewProj = camera->GetViewProjection();
-
-        sData->BasicShader->Bind();
-        sData->BasicShader->SetMat4("uViewProj", sData->ViewProj);
     }
 
     void Renderer::EndScene() {
 
     }
 
-    void Renderer::Submit(std::shared_ptr<VertexArray> &VA) {
+    void Renderer::Submit(std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> &VA) {
         VA->Bind();
 
-        sData->BasicShader->Bind();
-        sData->BasicShader->SetMat4("uTransform", glm::mat4(1));
-        sData->BasicShader->SetFloat3("uColor", glm::vec3(1));
+        shader->Bind();
+        shader->SetMat4("uViewProj", sData->ViewProj);
+        shader->SetMat4("uTransform", glm::mat4(1));
+        shader->SetFloat3("uColor", glm::vec3(1));
 
         glDrawElements(GL_TRIANGLES, sData->CubeVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
     }
 
-    void Renderer::SubmitCube(const glm::vec3& position, const glm::vec3& scale) {
+    void Renderer::SubmitCube(std::shared_ptr<Shader> shader, const glm::vec3& position, const glm::vec3& scale) {
         sData->CubeVA->Bind();
 
-        
+        auto transform = glm::translate(glm::scale(glm::mat4(1), scale), position);
 
-        sData->BasicShader->Bind();
-        sData->BasicShader->SetMat4("uTransform", glm::mat4(1));
-        sData->BasicShader->SetFloat3("uColor", glm::vec3(1));
+        shader->Bind();
+        shader->SetMat4("uViewProj", sData->ViewProj);
+        shader->SetMat4("uTransform", transform);
+        shader->SetFloat3("uColor", glm::vec3(1));
 
         glDrawElements(GL_TRIANGLES, sData->CubeVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
     }

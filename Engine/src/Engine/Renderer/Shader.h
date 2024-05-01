@@ -18,9 +18,14 @@ namespace Engine {
         ~Shader();
 
         static std::shared_ptr<Shader> Create(const std::string& path);
+        static void Init();
+
+        static std::shared_ptr<Shader> Get(const std::string& name);
 
         void Bind();
         void Unbind();
+
+        const std::string& GetName() const {return mName;}
 
         int GetLocation(const std::string& name);
 
@@ -38,7 +43,11 @@ namespace Engine {
         void SetMat4(const std::string& name, const glm::mat4& v);
 
     private:
+        static std::unordered_map<std::string, std::shared_ptr<Shader>> sShaders;
+
+    private:
         uint32_t mRendererID;
+        std::string mName;
     };
 }
 

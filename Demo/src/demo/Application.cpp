@@ -6,6 +6,7 @@
 
 #include "engine/Core/Engine.h"
 #include "Engine/Renderer/Renderer.h"
+#include "Engine/Renderer/Shader.h"
 
 #include <iostream>
 
@@ -35,7 +36,11 @@ namespace Demo {
     void Application::Render() {
         Engine::Renderer::StartScene(mCamController->GetCamera());
 
-        Engine::Renderer::SubmitCube();
+        auto shader = Engine::Shader::Get("Solid_Unlit");
+
+        Engine::Renderer::SubmitCube(shader, {1.0, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+        Engine::Renderer::SubmitCube(shader, {1.0, 5.0f, 0.0f}, {2.0f, 1.0f, 1.0f});
+        Engine::Renderer::SubmitCube(shader, {1.0, 0.0f, 4.0f}, {1.0f, 0.5f, 4.0f});
 
         Engine::Renderer::EndScene();
     }

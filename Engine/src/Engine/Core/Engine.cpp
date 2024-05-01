@@ -32,6 +32,7 @@ namespace Engine {
         sInstance = this;
 
         Renderer::Init();
+        Shader::Init();
 
         mRunning = true;
     }

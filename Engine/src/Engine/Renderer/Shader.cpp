@@ -7,6 +7,7 @@
 #include "Shader.h"
 #include "Glad/glad.h"
 #include "glm/gtc/type_ptr.hpp"
+#include <filesystem>
 
 
 #define VERTEX_SHADER 0
@@ -55,12 +56,30 @@ ShaderSource LoadShaderSource(const std::string& path){
 }
 
 
+std::unordered_map<std::string, std::shared_ptr<Engine::Shader>> Engine::Shader::sShaders;
+
 namespace Engine {
+    void Shader::Init() {
+        Create("../assets/shaders/Solid_Unlit.glsl");
+    }
+
     std::shared_ptr<Shader> Shader::Create(const std::string &path) {
-        return std::make_shared<Shader>(path);
+        auto shader = std::make_shared<Shader>(path);
+        sShaders[shader->GetName()] = shader;
+
+        std::cout << shader->GetName() << '\n';
+
+        return shader;
+    }
+
+    std::shared_ptr<Shader> Shader::Get(const std::string &name) {
+        return sShaders[name];
     }
 
     Shader::Shader(const std::string &path) {
+        std::filesystem::path p = path;
+        mName = p.stem().string();
+
         auto source = LoadShaderSource(path);
 
         GLint vertexShader = glCreateShader(GL_VERTEX_SHADER);
