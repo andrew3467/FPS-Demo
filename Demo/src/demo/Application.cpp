@@ -6,7 +6,6 @@
 
 #include "engine/Core/Engine.h"
 #include "Engine/Renderer/Renderer.h"
-#include "Engine/Renderer/Shader.h"
 
 #include <iostream>
 
@@ -29,7 +28,7 @@ namespace Demo {
     }
 
     void Application::Init() {
-        mCamController = std::make_unique<CameraController>(1.0f, 0.25f);
+        mCamController = std::make_unique<CameraController>(0.125f, 0.25f);
 
         auto texture = Engine::Texture2D::Create("../assets/textures/worn_planks_diff_4k.png");
 

@@ -34,6 +34,8 @@ namespace Engine {
         Renderer::Init();
         Shader::Init();
 
+        glEnable(GL_DEPTH_TEST);
+
         mRunning = true;
     }
 
