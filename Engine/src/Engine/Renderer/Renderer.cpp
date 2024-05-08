@@ -167,9 +167,11 @@ namespace Engine {
         const glm::vec3 scale = {10, 10, 10};
         const glm::vec3 position = {0,0,0};
 
+        auto transform = glm::scale(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(-90, 0, 0)), glm::vec3(0.1f));
+
         s->SetInt("uTexture", 0);
         s->SetMat4("uViewProj", sData->ViewProj);
-        s->SetMat4("uTransform", glm::mat4(1));
+        s->SetMat4("uTransform", transform);
 
         glDrawElements(GL_TRIANGLES, mesh->GetVertexArray()->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
     }
@@ -178,23 +180,7 @@ namespace Engine {
         auto transform = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
         for(auto& mesh : model->GetMeshes()) {
-            auto& material = mesh->GetMaterial();
-            auto& shader = material.GetShader();
-
-            shader->Bind();
-
-            shader->SetInt("uTexture", 0);
-            shader->SetMat4("uViewProj", sData->ViewProj);
-            shader->SetMat4("uTransform", transform);
-
-            shader->SetFloat4("uColor", glm::vec4(1.0f));
-
-            material.GetDiffuse()->Bind(0);
-            shader->SetInt("uTexture", 0);
-
-
-            mesh->GetVertexArray()->Bind();
-            glDrawElements(GL_TRIANGLES, mesh->GetVertexArray()->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+            Submit(mesh->GetMaterial(), mesh);
         }
     }
 }
