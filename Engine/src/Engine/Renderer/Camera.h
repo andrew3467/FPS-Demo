@@ -24,7 +24,7 @@ namespace Engine {
 
         ~Camera();
 
-        void SetPosition(const glm::vec3 &position) {
+        inline void SetPosition(const glm::vec3 &position) {
             mPosition = position;
             RecalculateMatrices();
         }
@@ -32,15 +32,11 @@ namespace Engine {
         void SetRotation(const glm::vec3 &rotation);
 
         void ProcessKeyboard(Camera_Movement direction, float deltaTime, float moveSpeed);
-
         void ProcessMouseMovement(float xoffset, float yoffset, float sensitivity, bool constrainPitch = true);
-
         void ProcessMouseScroll(float yoffset);
 
         inline const glm::mat4 &GetViewProjection() const { return mViewProjection; }
-
         inline const glm::mat4 &GetView() const { return mView; }
-
         inline const glm::mat4 &GetProjection() const { return mProjection; }
 
     private:

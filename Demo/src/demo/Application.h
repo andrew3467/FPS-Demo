@@ -29,6 +29,8 @@ namespace Demo {
 
     private:
         std::unique_ptr<CameraController> mCamController;
+
+
     };
 }
 

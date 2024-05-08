@@ -1,13 +1,15 @@
+
 //
 // Created by Andrew Graser on 4/30/2024.
 //
 
 #include "CameraController.h"
+
 #include "Engine/Core/Input.h"
 #include "Engine/Core/Engine.h"
+#include "Engine/Renderer/Camera.h"
 
 #include "GLFW/glfw3.h"
-#include "Engine/Renderer/Camera.h"
 
 
 namespace Demo {
@@ -74,3 +76,4 @@ namespace Demo {
         }
     }
 }
+

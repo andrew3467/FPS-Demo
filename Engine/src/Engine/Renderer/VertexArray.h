@@ -23,6 +23,8 @@ namespace Engine {
         inline std::vector<std::shared_ptr<VertexBuffer>> GetVertexBuffers() { return mVertexBuffers;}
         inline std::shared_ptr<IndexBuffer> GetIndexBuffer() { return mIndexBuffer;}
 
+        void RemoveBuffers();
+
         void SetVertexBuffer(const std::shared_ptr<VertexBuffer>& buffer);
         void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& buffer);
 

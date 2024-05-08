@@ -107,18 +107,17 @@ namespace Engine {
 
         s->Bind();
 
-        if(material.GetTexture() == nullptr){
+        if(material.GetDiffuse() == nullptr){
             sData->WhiteTexture->Bind(0);
             s->SetFloat4("uColor", material.GetColor());
         }else{
-            material.GetTexture()->Bind(0);
+            material.GetDiffuse()->Bind(0);
             s->SetFloat4("uColor", glm::vec4(1.0f));
         }
 
         s->SetInt("uTexture", 0);
         s->SetMat4("uViewProj", sData->ViewProj);
         s->SetMat4("uTransform", glm::mat4(1));
-        s->SetFloat3("uColor", material.GetColor());
 
         glDrawElements(GL_TRIANGLES, sData->CubeVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
     }
@@ -132,11 +131,11 @@ namespace Engine {
         auto s = material.GetShader();
         s->Bind();
 
-        if(material.GetTexture() == nullptr){
+        if(material.GetDiffuse() == nullptr){
             sData->WhiteTexture->Bind(0);
             s->SetFloat4("uColor", material.GetColor());
         }else{
-            material.GetTexture()->Bind(0);
+            material.GetDiffuse()->Bind(0);
             s->SetFloat4("uColor", glm::vec4(1.0f));
         }
 
@@ -147,5 +146,55 @@ namespace Engine {
 
 
         glDrawElements(GL_TRIANGLES, sData->CubeVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+    }
+
+    void Renderer::Submit(Material &material, std::shared_ptr<Mesh> &mesh) {
+        mesh->GetVertexArray()->Bind();
+
+
+        auto s = material.GetShader();
+
+        s->Bind();
+
+        if(material.GetDiffuse() == nullptr){
+            sData->WhiteTexture->Bind(0);
+            s->SetFloat4("uColor", material.GetColor());
+        }else{
+            material.GetDiffuse()->Bind(0);
+            s->SetFloat4("uColor", glm::vec4(1.0f));
+        }
+
+        const glm::vec3 scale = {10, 10, 10};
+        const glm::vec3 position = {0,0,0};
+
+        s->SetInt("uTexture", 0);
+        s->SetMat4("uViewProj", sData->ViewProj);
+        s->SetMat4("uTransform", glm::mat4(1));
+
+        glDrawElements(GL_TRIANGLES, mesh->GetVertexArray()->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+    }
+
+    void Renderer::Submit(std::shared_ptr<Model> &model) {
+        auto transform = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+
+        for(auto& mesh : model->GetMeshes()) {
+            auto& material = mesh->GetMaterial();
+            auto& shader = material.GetShader();
+
+            shader->Bind();
+
+            shader->SetInt("uTexture", 0);
+            shader->SetMat4("uViewProj", sData->ViewProj);
+            shader->SetMat4("uTransform", transform);
+
+            shader->SetFloat4("uColor", glm::vec4(1.0f));
+
+            material.GetDiffuse()->Bind(0);
+            shader->SetInt("uTexture", 0);
+
+
+            mesh->GetVertexArray()->Bind();
+            glDrawElements(GL_TRIANGLES, mesh->GetVertexArray()->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+        }
     }
 }

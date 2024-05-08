@@ -71,4 +71,9 @@ namespace Engine {
         glBindVertexArray(mRendererID);
         buffer->Bind();
     }
+
+    void VertexArray::RemoveBuffers() {
+        mIndexBuffer = nullptr;
+        mVertexBuffers.clear();
+    }
 }

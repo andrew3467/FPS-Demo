@@ -4,8 +4,9 @@
 
 #include "Application.h"
 
-#include "engine/Core/Engine.h"
+#include "Engine/Core/Engine.h"
 #include "Engine/Renderer/Renderer.h"
+#include "Engine/Renderer/Model.h"
 
 #include <iostream>
 
@@ -14,6 +15,9 @@ namespace Demo {
 
     std::unique_ptr<Engine::Material> mat1;
     std::unique_ptr<Engine::Material> mat2;
+    std::unique_ptr<Engine::Material> mat3;
+
+    std::shared_ptr<Engine::Model> model;
 
     void Application::Run() {
         Engine::Engine engine;
@@ -34,9 +38,13 @@ namespace Demo {
 
         mat1 = std::make_unique<Engine::Material>(Engine::Shader::Get("Solid_Unlit"));
         mat1->SetColor(glm::vec4(0.8f, 0.2f, 0.4f, 1.0f));
-        mat1->SetTexture(texture);
+        mat1->SetDiffuse(texture);
         mat2 = std::make_unique<Engine::Material>(Engine::Shader::Get("Solid_Unlit"));
         mat2->SetColor(glm::vec4(0.2f, 0.8f, 0.4f, 1.0f));
+        mat3 = std::make_unique<Engine::Material>(Engine::Shader::Get("Solid_Unlit"));
+        mat3->SetColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+
+        model = Engine::Model::Create("../assets/models/Airplane/Airplane.obj");
     }
 
     void Application::Update() {
@@ -50,6 +58,8 @@ namespace Demo {
         Engine::Renderer::SubmitCube(*mat1, {1.0, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
         Engine::Renderer::SubmitCube(*mat2, {1.0, 5.0f, 0.0f}, {2.0f, 1.0f, 1.0f});
         Engine::Renderer::SubmitCube(*mat2, {1.0, 0.0f, 4.0f}, {1.0f, 0.5f, 4.0f});
+
+        Engine::Renderer::Submit(model);
 
         Engine::Renderer::EndScene();
     }

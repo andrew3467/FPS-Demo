@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.27)
-project(FPS_Engine)
+project(Engine)
 
 set(CMAKE_CXX_STANDARD 23)
 
@@ -21,6 +21,11 @@ include_directories(external/glm)
 file(GLOB_RECURSE STB_SRC external/stbimage/*)
 include_directories(external/stbimage/include)
 
+# assimp
+add_subdirectory(external/assimp)
+include_directories(external/assimp/include)
+set(ASSIMP_BUILD_TESTS OFF)
+
 
 include_directories(src/Engine)
 
@@ -28,16 +33,17 @@ file(GLOB_RECURSE SOURCES src/*.cpp)
 file(GLOB_RECURSE HEADERS src/*.h)
 
 add_library(
-        FPS_Engine
+        Engine
         ${SOURCES}
         ${HEADERS}
         ${STB_SRC}
 )
 
 target_link_libraries(
-        FPS_Engine
+        Engine
         PUBLIC
         glfw
         glad
         glm
+        assimp
 )
