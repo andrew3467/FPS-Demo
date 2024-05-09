@@ -105,7 +105,7 @@ namespace Engine {
         mesh->SetData(vertices, indices);
 
         //Textures
-        auto mat = std::make_shared<Material>(Engine::Shader::Get("Solid_Unlit"));
+        auto mat = std::make_shared<Material>(Engine::Shader::Get("Standard_Lit"));
         mesh->SetMaterial(mat);
         if(aiMesh->mMaterialIndex >= 0){
             auto& mat = mesh->GetMaterial();

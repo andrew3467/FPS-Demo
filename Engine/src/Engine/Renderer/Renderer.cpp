@@ -14,6 +14,7 @@
 namespace Engine {
     struct SceneData {
         glm::mat4 ViewProj;
+        glm::vec3 ViewPos;
 
         std::shared_ptr<Texture2D> WhiteTexture;
 
@@ -90,10 +91,11 @@ namespace Engine {
         }
     }
 
-    void Renderer::StartScene(const std::shared_ptr<Camera>& camera) {
+    void Renderer::StartScene(const Camera& camera) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        sData->ViewProj = camera->GetViewProjection();
+        sData->ViewProj = camera.GetViewProjection();
+        sData->ViewPos = camera.GetPosition();
     }
 
     void Renderer::EndScene() {
@@ -148,7 +150,8 @@ namespace Engine {
         glDrawElements(GL_TRIANGLES, sData->CubeVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
     }
 
-    void Renderer::Submit(Material &material, std::shared_ptr<Mesh> &mesh) {
+    void Renderer::Submit(std::shared_ptr<Mesh> &mesh) {
+        auto& material = mesh->GetMaterial();
         mesh->GetVertexArray()->Bind();
 
 
@@ -164,10 +167,7 @@ namespace Engine {
             s->SetFloat4("uColor", glm::vec4(1.0f));
         }
 
-        const glm::vec3 scale = {10, 10, 10};
-        const glm::vec3 position = {0,0,0};
-
-        auto transform = glm::scale(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(-90, 0, 0)), glm::vec3(0.1f));
+        auto transform = glm::scale(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(-90, 0, 0)), glm::vec3(0.01f));
 
         s->SetInt("uTexture", 0);
         s->SetMat4("uViewProj", sData->ViewProj);
@@ -176,11 +176,43 @@ namespace Engine {
         glDrawElements(GL_TRIANGLES, mesh->GetVertexArray()->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
     }
 
-    void Renderer::Submit(std::shared_ptr<Model> &model) {
-        auto transform = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+    void Renderer::Submit(std::shared_ptr<Mesh> &mesh, const std::vector<PointLight> &lights) {
+        auto& shader = mesh->GetMaterial().GetShader();
+        shader->Bind();
 
+        shader->SetFloat3("uViewPos", sData->ViewPos);
+
+        shader->SetFloat3("uLight.Position", lights[0].Position);
+        shader->SetFloat3("uLight.Ambient", lights[0].Ambient);
+
+        Submit(mesh);
+    }
+
+    void Renderer::Submit(std::shared_ptr<Model> &model) {
         for(auto& mesh : model->GetMeshes()) {
-            Submit(mesh->GetMaterial(), mesh);
+            Submit(mesh);
+        }
+    }
+
+    void Renderer::Submit(const PointLight &light) {
+        auto transform = glm::translate(glm::mat4(1), light.Position);
+
+        auto shader = Shader::Get("Standard_Unlit");
+        shader->Bind();
+
+        shader->SetMat4("uViewProj", sData->ViewProj);
+        shader->SetMat4("uTransform", transform);
+
+        sData->WhiteTexture->Bind(0);
+        shader->SetFloat4("uColor", glm::vec4(light.Ambient, 1.0));
+
+        sData->CubeVA->Bind();
+        glDrawElements(GL_TRIANGLES, sData->CubeVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+    }
+
+    void Renderer::Submit(std::shared_ptr<Model> &model, const std::vector<PointLight> &lights) {
+        for(auto& mesh : model->GetMeshes()) {
+            Submit(mesh, lights);
         }
     }
 }

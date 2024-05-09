@@ -38,6 +38,7 @@ namespace Engine {
         inline const glm::mat4 &GetViewProjection() const { return mViewProjection; }
         inline const glm::mat4 &GetView() const { return mView; }
         inline const glm::mat4 &GetProjection() const { return mProjection; }
+        inline const glm::vec3 &GetPosition() const {return mPosition;}
 
     private:
         void RecalculateMatrices();

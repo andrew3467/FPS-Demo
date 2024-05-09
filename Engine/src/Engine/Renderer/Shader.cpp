@@ -60,7 +60,8 @@ std::unordered_map<std::string, std::shared_ptr<Engine::Shader>> Engine::Shader:
 
 namespace Engine {
     void Shader::Init() {
-        Create("../assets/shaders/Solid_Unlit.glsl");
+        Create("../assets/shaders/Standard_Unlit.glsl");
+        Create("../assets/shaders/Standard_Lit.glsl");
     }
 
     std::shared_ptr<Shader> Shader::Create(const std::string &path) {
