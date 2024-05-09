@@ -112,10 +112,12 @@ namespace Engine {
 
             auto material = scene->mMaterials[aiMesh->mMaterialIndex];
             auto diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-            mat.SetDiffuse(diffuseMaps[0]);
+            if(diffuseMaps.size() > 0)
+                mat.SetDiffuse(diffuseMaps[0]);
 
             auto specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-            //mat.SetSpecular(specularMaps[0]);
+            if(specularMaps.size() > 0)
+                mat.SetSpecular(specularMaps[0]);
         }
 
 

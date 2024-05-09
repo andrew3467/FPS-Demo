@@ -7,6 +7,7 @@ add_subdirectory(../Engine ../bin)
 
 include_directories(../Engine/src)
 include_directories(src/demo)
+include_directories(../Engine/external/imgui)
 
 file(GLOB_RECURSE SOURCES src/*.cpp)
 file(GLOB_RECURSE HEADERS src/*.h)

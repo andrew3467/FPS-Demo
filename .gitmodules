@@ -7,3 +7,6 @@
 [submodule "Engine/external/assimp"]
 	path = Engine/external/assimp
 	url = https://github.com/assimp/assimp.git
+[submodule "Engine/external/imgui"]
+	path = Engine/external/imgui
+	url = https://github.com/andrew3467/imgui.git

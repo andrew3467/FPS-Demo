@@ -7,7 +7,6 @@ add_subdirectory(external/glfw)
 include_directories(external/glfw/include)
 add_compile_definitions(GLFW_INCLUDE_NONE)
 
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
@@ -25,6 +24,10 @@ include_directories(external/stbimage/include)
 add_subdirectory(external/assimp)
 include_directories(external/assimp/include)
 set(ASSIMP_BUILD_TESTS OFF)
+
+# ImGui
+add_subdirectory(external/imgui)
+include_directories(external/imgui)
 
 
 include_directories(src/Engine)
@@ -46,4 +49,5 @@ target_link_libraries(
         glad
         glm
         assimp
+        ImGui
 )

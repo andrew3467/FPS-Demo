@@ -22,6 +22,7 @@ namespace Demo {
 
         void Update();
         void Render();
+        void OnImGuiRender();
 
     private:
         static Application *sInstance;

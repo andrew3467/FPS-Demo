@@ -24,6 +24,8 @@ namespace Engine {
         void Init();
         void Update();
 
+        void OnImGuiRender(const std::function<void(void)>& func);
+
         void OnEvent(Event &e);
 
     private:

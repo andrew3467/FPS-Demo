@@ -7,7 +7,10 @@
 #include "Engine/Core/Engine.h"
 #include "Engine/Renderer/Renderer.h"
 #include "Engine/Renderer/Model.h"
+
+
 #include "GLFW/glfw3.h"
+#include "ImGui.h"
 
 #include <iostream>
 
@@ -30,6 +33,7 @@ namespace Demo {
         while(engine.IsRunning()){
             Update();
             Render();
+            engine.OnImGuiRender(std::bind(&Application::OnImGuiRender, this));
             engine.Update();
         }
     }
@@ -47,7 +51,7 @@ namespace Demo {
         mat3 = std::make_unique<Engine::Material>(Engine::Shader::Get("Standard_Unlit"));
         mat3->SetColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
-        model = Engine::Model::Create("../assets/models/Airplane/Airplane.obj");
+        model = Engine::Model::Create("../assets/models/Sniper/Alien_Animal.obj");
 
         pointLights.push_back({glm::vec3(0, 0, 20),
                                glm::vec3(1,1,1)});
@@ -74,5 +78,15 @@ namespace Demo {
         }
 
         Engine::Renderer::EndScene();
+    }
+
+    void Application::OnImGuiRender() {
+        for(int i = 0; i < pointLights.size(); i++) {
+            auto lightIndex = std::string("Light #").append(std::to_string(i));
+            if(ImGui::CollapsingHeader(lightIndex.c_str())) {
+                ImGui::SliderFloat3("Position", &pointLights[i].Position.x, -10, 10);
+                ImGui::ColorPicker3("Ambient", &pointLights[i].Ambient.x);
+            }
+        }
     }
 }

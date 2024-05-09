@@ -6,9 +6,13 @@
 
 #include <GLFW/glfw3.h>
 #include <Glad/glad.h>
+#include "imgui.h"
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
 
 #include "Engine.h"
 #include "Renderer/Renderer.h"
+
 
 namespace Engine {
 #define BIND_EVENT_FUNC(x) std::bind(&x, this, std::placeholders::_1)
@@ -33,6 +37,17 @@ namespace Engine {
 
         Renderer::Init();
         Shader::Init();
+
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO &io = ImGui::GetIO(); (void)io;
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+
+        ImGui::StyleColorsDark();
+
+        ImGui_ImplGlfw_InitForOpenGL(Engine::Get().GetWindow().GetNativeWindow(), true);
+        ImGui_ImplOpenGL3_Init("#version 460");
 
         glEnable(GL_DEPTH_TEST);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -59,5 +74,22 @@ namespace Engine {
 
     bool Engine::OnWindowResize(WindowResizeEvent &e) {
         return false;
+    }
+
+    void Engine::OnImGuiRender(const std::function<void(void)>& func) {
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        ImGui::Begin("FPS Demo");
+
+        func();
+
+        ImGui::End();
+
+
+        //Render ImGui window
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 }

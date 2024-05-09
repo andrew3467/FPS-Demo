@@ -167,7 +167,7 @@ namespace Engine {
             s->SetFloat4("uColor", glm::vec4(1.0f));
         }
 
-        auto transform = glm::scale(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(-90, 0, 0)), glm::vec3(0.01f));
+        auto transform = glm::scale(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(-90, 0, 0)), glm::vec3(1.f));
 
         s->SetInt("uTexture", 0);
         s->SetMat4("uViewProj", sData->ViewProj);
